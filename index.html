@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f8b8d"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Just Start"><link rel="apple-touch-icon" href="icons/icon-192.png"><link rel="icon" href="icons/icon-192.png">
+<title>Just Start (Copy)</title>
+<style>
+:root{--bg:#f7f6f1;--card:#ffffff;--tx:#1b2a41;--mu:#5f6b7a;--ac:#0f8b8d;--ac2:#ffffff;--bd:#e3e0d8;--hl:#e8590c;--e1:#4c8bf5;--e2:#f0a30a;--e3:#2f9e44;--mot:#2f9e44;--dis:#e03131}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1e21;--card:#26292d;--tx:#eceae4;--mu:#a3a9b2;--ac:#2bb3b1;--ac2:#062120;--bd:#3a3f45;--hl:#f2a93b;--e1:#74a7ff;--e2:#f5b942;--e3:#63d68a;--mot:#63d68a;--dis:#ff8787}}
+:root[data-theme="dark"]{--bg:#1c1e21;--card:#26292d;--tx:#eceae4;--mu:#a3a9b2;--ac:#2bb3b1;--ac2:#062120;--bd:#3a3f45;--hl:#f2a93b;--e1:#74a7ff;--e2:#f5b942;--e3:#63d68a;--mot:#63d68a;--dis:#ff8787}
+*{box-sizing:border-box}body{margin:0 auto;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,sans-serif;padding:0 16px 70px;max-width:520px}
+h1{font-size:22px;margin:8px 0 2px}p{margin:6px 0}.mu{color:var(--mu);font-size:14px}
+#nav{display:flex;gap:4px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}#nav button{flex:1;padding:8px 0;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.cd{flex:1;min-width:100px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;text-align:center}
+.cd b{display:block;font-size:26px;color:var(--hl)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-top:14px}
+button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:10px 14px;cursor:pointer}
+button.p{background:var(--ac);color:var(--ac2);border-color:var(--ac);font-weight:600;width:100%;margin-top:10px;padding:14px}
+button.w{width:100%;margin-top:8px;text-align:left}button.on{border-color:var(--ac);color:var(--ac);font-weight:600}
+.t{font-size:64px;text-align:center;font-variant-numeric:tabular-nums;margin:6px 0}
+input,select{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.tag{display:inline-block;font-size:12px;background:var(--bd);border-radius:20px;padding:2px 10px;color:var(--mu)}
+button:disabled{opacity:.4;cursor:not-allowed}.tn{padding:4px 10px;font-size:12px}.hide{display:none}.why{border-left:3px solid var(--ac);padding-left:10px;font-style:italic}
+.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--ac)}
+.lg{font-size:14px;border-top:1px solid var(--bd);padding:6px 0}
+#corner{position:fixed;right:12px;bottom:10px;font-size:12px;color:var(--mu);background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:3px 12px}
+#cv{position:fixed;inset:0;pointer-events:none;z-index:9}
+#ts{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--ac);color:var(--ac2);padding:8px 16px;border-radius:20px;z-index:10;font-weight:600;text-align:center;white-space:pre-line;max-width:90%}
+a.l{color:var(--ac)}details{margin-top:8px}
+</style></head><body>
+<div id="nav"><button id="nb-main" onclick="go('main')">Main</button><button id="nb-exams" onclick="go('exams')">Exams</button><button id="nb-chap" onclick="go('chap')">Chapters</button><button id="nb-ins" onclick="go('ins')">Insights</button><button id="nb-set" onclick="go('set')">Settings</button></div>
+<canvas id="cv"></canvas><div id="ts" class="hide"></div>
+
+<div id="pg-main">
+<h1>Just Start</h1>
+<p class="mu">You don't need motivation. You need a tiny first step.</p>
+<p class="why hide" id="why"></p>
+<p class="mu"><a class="l" href="#" id="wl">Add a note: why I want to focus / why I can't</a></p>
+<div id="wb" class="hide"><select id="nk"><option value="mot">Why I want to focus</option><option value="dist">Why I can't focus</option></select><input id="wi" placeholder="Type it, press Enter" style="margin-top:6px"></div>
+<div class="card" id="nx" style="margin-top:0"></div><div class="row" id="cds" style="margin-top:10px"></div>
+<div class="card" id="pick"><p><b>How's your energy?</b></p><div class="row" id="en"></div>
+<p style="margin-top:12px"><b>Preference</b> <span class="mu">(optional, it can still pick any)</span></p><select id="fs"></select>
+<button class="p" id="go">Give me ONE thing</button></div>
+<div class="card hide" id="task"><span class="tag" id="sub"></span>
+<p style="font-size:20px;font-weight:600;margin:8px 0" id="tt"></p><p>First step only: <b id="st"></b></p>
+<button class="p" id="start">Start 5 minutes</button><button class="w" id="sm">Make it smaller</button><button class="w" id="skip">Swap the task</button></div>
+<div class="card hide" id="run"><p class="mu" id="rl"></p><div class="t" id="tm">5:00</div>
+<div class="row"><button id="add" style="flex:2;padding:18px;font-size:18px;font-weight:600">+5 min</button><button id="ps" style="flex:1">Pause</button><button id="fn" style="flex:1">Finish now</button></div>
+<div class="row" style="margin-top:6px"><button class="tn" data-a="600">+10 min</button><button class="tn" data-a="1800">+30 min</button><button class="tn" data-a="3600">+1 hr</button></div>
+<p class="mu" style="margin-top:12px">Distracted? Park the thought and go back:</p><input id="pk" placeholder="Type it, press Enter"><p class="mu" id="pl"></p></div>
+<div class="card hide" id="rev"><p style="font-size:18px;font-weight:600" id="rm"></p><p>How productive did you feel? <span class="mu">1 = not at all, 5 = very</span></p>
+<div class="row" id="pr"></div><button class="w" id="more">Not done: add 5 more min</button><button class="w hide" id="tdd">Also mark it done in Todoist</button><p class="mu" id="tdm"></p></div>
+
+</div>
+
+<div id="pg-exams" class="hide"><h1>Exams</h1><p class="mu">Progress comes from the work you log. Tick "I feel ready" when it feels true.</p><div id="exs"></div></div>
+<div id="pg-chap" class="hide"><h1>Chapters</h1><div id="chs"></div></div>
+<div id="pg-ins" class="hide"><h1>Insights</h1>
+<div class="row"><select id="rg" style="flex:1"><option value="today">Today</option><option value="week">This week</option><option value="month">This month</option><option value="all">All time</option></select><select id="gs" style="flex:1"><option value="bar">Bar graphs</option><option value="curve">Curved graphs</option></select></div>
+<div id="insb"></div></div>
+<div id="pg-set" class="hide"><h1>Settings</h1>
+<div class="card"><label style="display:block"><input type="checkbox" id="pz" style="width:auto;margin-right:8px"><b>Personalize from my logged sessions</b></label><p class="mu">When on, once you have 10 sessions at an energy level, "Give me ONE thing" favours the task types that felt most productive at that energy. Until then it uses the research-based defaults.</p><div id="pzs"></div></div>
+<div class="card"><p><b>Add a session manually</b></p><p class="mu">For study you did away from the app.</p>
+<select id="mc"></select><select id="mt" style="margin-top:6px"></select>
+<div class="row" style="margin-top:6px"><label class="mu" style="flex:1">Start<input id="md" type="datetime-local"></label><label class="mu" style="flex:1">End<input id="mf" type="datetime-local"></label></div><p class="mu" id="mmn"></p><div class="row"><select id="mp" style="flex:1"><option value="0">Productive? 1-5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><select id="me" style="flex:1"><option value="1">Low energy</option><option value="2" selected>Okay energy</option><option value="3">High energy</option></select></div>
+<button class="p" id="ma">Add session</button><p class="mu" id="mg"></p></div>
+<div class="card"><p><b>Theme</b></p><select id="th"><option value="auto">Automatic (follows your phone)</option><option value="light">Calm Focus (light)</option><option value="dark">Night Study (dark)</option></select></div>
+<div class="card"><p><b>Timer</b></p><label style="display:block"><input type="checkbox" id="al" style="width:auto;margin-right:8px">Sound and vibration when time is up</label><label style="display:block;margin-top:6px"><input type="checkbox" id="wl" style="width:auto;margin-right:8px">Keep the screen on during a session</label><button class="w" id="nf">Allow notifications</button><p class="mu" id="nm">Alerts can be late if the app is in the background. Keeping the screen on is the most reliable.</p></div>
+<div class="card"><p><b>Undo a session</b></p><p class="mu">Sessions logged in the last 24 hours. Tap Undo, then tap again to confirm.</p><div id="ul"></div><p class="mu" id="um"></p></div>
+<div class="card"><p><b>Todoist</b></p><p class="mu">Tasks due today or overdue join "Give me ONE thing" and get priority (it can still pick anything). Uses the Todoist connector in your Claude account; Claude asks permission the first time.</p><input id="tk" type="password" autocomplete="off" placeholder="Paste Todoist API token" style="margin-top:8px"><p class="mu">Get it in Todoist: Settings, Integrations, Developer. It is stored only in this browser and is not included in backups.</p><button class="w" id="tdb">Connect Todoist</button><p class="mu" id="tds"></p><p class="mu" style="margin-top:10px">Exams and deadlines come from Todoist tasks with these words in the name (comma-separated). A task on the same date as a built-in exam keeps that exam's chapters.</p><input id="kw" placeholder="exam,test,midterm,practical,project"></div>
+<div class="card"><p><b>Backup</b></p><p class="mu">Your data lives in this browser only. Save a file now and then.</p>
+<button class="w" id="bx">Save backup file</button><button class="w" id="bt">Show backup text (to copy)</button>
+<input type="file" id="bf" accept=".json,application/json" style="margin-top:8px">
+<textarea id="ba" placeholder="Or paste backup text here" style="width:100%;height:70px;margin-top:8px;font:inherit;padding:8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)"></textarea>
+<button class="w" id="br">Restore (replaces current data)</button><p class="mu" id="bm"></p></div>
+</div>
+<div id="corner"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+function E(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var CH0=[["p1","Physics","Magnetic Effects of Current"],["p2","Physics","Magnetic Materials"],["p3","Physics","Electromagnetic Induction"],["p4","Physics","Alternating Current"],["p5","Physics","EM Waves"],["p6","Physics","Wave Optics"],["p7","Physics","Modern Physics (photoelectric effect)"],["p8","NCERT Physics","Moving Charges and Magnetism"],["p9","NCERT Physics","Magnetism and Matter"],["p10","NCERT Physics","Electromagnetic Induction"],["p11","NCERT Physics","Alternating Current"],["c1","Chemistry","Alcohols"],["c2","Chemistry","Ethers"],["c3","Chemistry","Phenols"],["c4","Chemistry","Epoxides"],["c5","Chemistry","Aldehydes and Ketones"],["c6","Chemistry","Carboxylic Acids and derivatives"],["c7","Chemistry","Nitrogen-containing compounds"],["c8","Chemistry","Chemical Kinetics"],["c9","Chemistry","Biomolecules"],["m1","Maths","Method of Differentiation"],["m2","Maths","Application of Derivatives"],["m3","Maths","Indefinite Integration"],["m4","Maths","Definite Integration"],["m5","Maths","Area Under Curve"],["m6","Maths","Differential Equations"]];
+var EXS=[["chp","Chem practical","2026-09-23"],["maj","Major test (Sunday)","2026-09-27"],["mat","Maths midterm","2026-09-30"],["eng","English midterm","2026-10-03"],["che","Chemistry midterm","2026-10-05"],["cs","Computer Science midterm","2026-10-09"],["phy","Physics midterm","2026-10-12"]];
+var CD=[["Chem practical","2026-09-23"],["Major test","2026-09-27"],["Maths midterm","2026-09-30"]];
+var S={ch:{},ex:null,log:[],pk:[],notes:[],rd:{},subs:[],pl:0,fs:"Any",rg:"week"},r=null;
+try{r=localStorage.getItem("js3")}catch(e){}
+if(r){try{S=JSON.parse(r)}catch(e){}}else{try{var o=JSON.parse(localStorage.getItem("js2")||"null");if(o){(o.log||[]).forEach(function(l){S.log.push({ts:l.ts,d:l.d,h:new Date(l.ts).getHours(),ch:"",sub:l.sub,task:l.task,type:"Other",m:l.m,p:l.p,k:l.k,mood:l.mood})});if(o.why)S.notes.push({ts:Date.now(),t:o.why,kind:"mot"});S.pl=o.pl||0}}catch(e){}}
+["log","pk","notes","subs"].forEach(function(k){S[k]=S[k]||[]});S.rd=S.rd||{};S.cr=S.cr||{};S.ch=S.ch||{};S.fs=S.fs||"Any";S.rg=S.rg||"week";
+function mig(){S.del=S.del||[];CH0.forEach(function(c){if(!S.ch[c[0]]&&S.del.indexOf(c[0])<0)S.ch[c[0]]={s:c[1],n:c[2],h:2,cr:0}});Object.keys(S.ch).forEach(function(k){S.ch[k].n=S.ch[k].n.replace(/ \((ALLEN|NCERT \d+)\)$/,"")});["p8","p9","p10","p11"].forEach(function(k){if(S.ch[k])S.ch[k].s="NCERT Physics"});["NCERT Chemistry","NCERT Maths"].forEach(function(x){if(S.subs.indexOf(x)<0)S.subs.push(x)});if(S.ex){EXS.forEach(function(e){S.ex[e[0]]=S.ex[e[0]]||[]});Object.keys(S.ex).forEach(function(k){S.ex[k]=S.ex[k].filter(function(i){return S.ch[i]})})}}mig();
+if(!S.ex){S.ex={maj:CH0.map(function(c){return c[0]}).filter(function(i){return["p8","p9","p10","p11"].indexOf(i)<0}),phy:["p8","p9","p10","p11"]};EXS.forEach(function(e){S.ex[e[0]]=S.ex[e[0]]||[]})}
+if(S.ex.phy&&(S.ex.phy.indexOf("p1")>=0||S.ex.phy.indexOf("p2")>=0))S.ex.phy=["p8","p9"].concat(S.ex.phy.filter(function(i){return i!="p1"&&i!="p2"}));
+if(S.ex.phy&&(S.ex.phy.indexOf("p3")>=0||S.ex.phy.indexOf("p4")>=0))S.ex.phy=S.ex.phy.filter(function(i){return i!="p3"&&i!="p4"}).concat(["p10","p11"]);
+function save(){try{localStorage.setItem("js3",JSON.stringify(S))}catch(e){}}
+function dk(d){return d.toLocaleDateString("en-CA")}
+function hm(m){m=Math.round(m);return m>=60?Math.floor(m/60)+"h "+m%60+"m":m+"m"}
+function days(d){var n=new Date();n.setHours(0,0,0,0);return Math.round((new Date(d+"T00:00:00")-n)/864e5)}
+function inR(ts){var a=Date.now()-ts,g=S.rg;return g=="all"||(g=="today"&&dk(new Date(ts))==dk(new Date()))||(g=="week"&&a<6048e5)||(g=="month"&&a<2592e6)}
+function tg(id){var c=S.ch[id],L=S.log.filter(function(l){return l.ch==id}).slice(-3),a=L.length?L.reduce(function(t,l){return t+l.p},0)/L.length:5;return 120*c.h*(a>=4?1:a>=3?1.15:a>=2?1.35:1.6)}
+function ck(id){var c=S.ch[id];if(!c.ck){var k=FA[id]||id,l=FC[k]?FC[k].split(";"):FB[/phys/i.test(c.s)?"Physics":/chem/i.test(c.s)?"Chemistry":/math/i.test(c.s)?"Maths":"X"];c.ck=l.map(function(t){return{t:t,d:false}})}return c.ck}
+function pc(id){var a=Math.min(100,S.ch[id].cr/tg(id)*100),L=ck(id);return Math.round(L.length?(a+L.filter(function(x){return x.d}).length/L.length*100)/2:a)}
+function ckHtml(id){var L=ck(id),h='<label style="display:block;margin:10px 0"><input type="checkbox" style="width:auto;margin-right:8px" data-cr2="1"'+(S.cr[id]?" checked":"")+'>I feel ready with this chapter</label>';
+if(S.cr[id]&&pc(id)<60)h+='<p class="mu">You feel ready, but tracked progress is '+pc(id)+'%. Worth a quick check.</p>';
+h+='<p style="margin:12px 0 4px"><b>Checklist</b> <span class="mu">'+L.filter(function(x){return x.d}).length+'/'+L.length+'</span></p>';
+L.forEach(function(x,i){h+='<div style="display:flex;align-items:center;gap:8px;font-size:14px;padding:3px 0"><input type="checkbox" style="width:auto" data-k="'+i+'"'+(x.d?" checked":"")+'><span style="flex:1'+(x.d?';text-decoration:line-through;color:var(--mu)':'')+'">'+E(x.t)+'</span><button data-kd="'+i+'" style="padding:2px 8px">×</button></div>'});
+return h+'<input id="ck" placeholder="Add a topic, press Enter" style="margin-top:6px">'}
+function tickMs(id,b4){var af=pc(id),m=[25,50,75,100].filter(function(x){return b4<x&&af>=x}).pop();if(m){conf(m==100?240:130);toast(S.ch[id].n+" reached "+m+"%!\nReward: "+RW[Math.floor(Math.random()*RW.length)],4800)}}
+function avg(L){return L.length?Math.round(L.reduce(function(a,i){return a+pc(i)},0)/L.length):0}
+var SC={"Physics":"#1971c2","NCERT Physics":"#4dabf7","Chemistry":"#7048e8","NCERT Chemistry":"#9775fa","Maths":"#e8590c","NCERT Maths":"#ffa94d","English":"#d6336c","Computer Science":"#868e96","Todoist":"#0f8b8d"};
+function scol(n){if(SC[n])return SC[n];var h=0;for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))%360;return"hsl("+h+",55%,50%)"}
+function bar(v,c){return '<div class="bar"><i style="width:'+v+'%'+(c?';background:'+c:'')+'"></i></div>'}
+function subs(){var a=[];Object.keys(S.ch).forEach(function(i){if(a.indexOf(S.ch[i].s)<0)a.push(S.ch[i].s)});S.subs.forEach(function(s){if(a.indexOf(s)<0)a.push(s)});return a}
+var PG=["main","exams","chap","ins","set"];
+var busy=false;function lock(){["exams","chap","ins"].forEach(function(p){$("nb-"+p).disabled=busy})}
+function go(n){if(busy&&n!="main"&&n!="set")return;PG.forEach(function(p){$("pg-"+p).classList.toggle("hide",p!=n);$("nb-"+p).classList.toggle("on",p==n)});if(n=="main")rPref();if(n=="exams")rEx();if(n=="chap")rCh();if(n=="ins")rIns();if(n=="set")rSet();scrollTo(0,0)}
+function rC(){var t=0,td=dk(new Date());S.log.forEach(function(l){if(l.d==td)t+=l.m});$("corner").textContent="Today: "+hm(t)+" focused"}
+var cv=$("cv"),cx=cv.getContext("2d");
+function conf(n){cv.width=innerWidth;cv.height=innerHeight;var ps=[],cl=["#0f8b8d","#e8590c","#f2a93b","#2f9e44","#4c8bf5"],i,f=0;for(i=0;i<n;i++)ps.push({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*12,vy:Math.random()*-10-2,c:cl[i%5]});(function a(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;cx.fillStyle=p.c;cx.fillRect(p.x,p.y,6,9)});if(++f<110)requestAnimationFrame(a);else cx.clearRect(0,0,cv.width,cv.height)})()}
+function toast(m,ms){$("ts").textContent=m;$("ts").classList.remove("hide");setTimeout(function(){$("ts").classList.add("hide")},ms||2800)}
+
+/* MAIN */
+var TY={"Recall check":[["Quick recall check","Close the book and write everything you remember about {f} in 2 minutes"],["Blank-page recall","Without looking, list 5 things about {f}"],["Teach it back","Explain {f} out loud as if teaching a friend"]],
+"Flashcard-style recall":[["Flashcard-style recall","Write 5 questions on {f} and answer them from memory"],["Self-quiz","Test yourself on 5 points of {f} and mark the ones you missed"],["Make 3 cards","Make 3 flashcards on {f}, then flip and recall"]],
+"Worked example":[["Worked example, then redo","Study one solved example on {f}, then redo it without looking"],["Cover and solve","Find a solved example on {f}, cover the solution, solve it, then compare"],["Fix a mistake","Redo a question on {f} you got wrong before and note why it went wrong"]],
+"Practice problems":[["Solve problems","Solve 3 problems on {f}"],["Quick fire","Do 5 quick questions on {f} with no notes"],["Stretch set","Try 2 harder questions on {f}"]],
+"Concept + self-explain":[["Learn and explain","Read the section on {f}, then explain it aloud in your own words"],["Why, not just what","Learn {f}, then write the why behind it in 3 lines"],["Find the fuzzy part","Read about {f} and note the one thing that still confuses you"]],
+"Mixed timed set":[["Mixed timed set","Do 5 mixed questions on {f} and older chapters, timed"],["15-minute mix","Timed 15 minutes: {f} mixed with another chapter"],["Backlog mix","Do 6 questions on {f} plus a backlog chapter, timed"]]};
+var FB={Physics:["key formulas","derivations","numericals","diagrams","conceptual questions"],Chemistry:["name reactions","reagents and conversions","mechanisms","distinguishing tests","exceptions and trends"],Maths:["key formulas","standard results","problem types","common mistakes","shortcuts"],X:["key points","definitions","examples","past questions"]};
+var FC={p1:"Biot-Savart cases;Ampere's law problems;force on charges and wires;right-hand rules",p2:"types of magnetic materials;hysteresis;magnetic properties and formulas",p3:"Faraday and Lenz laws;motional emf problems;direction of induced current;self and mutual inductance",p4:"LCR phasor diagrams;impedance and resonance;power factor numericals;LC oscillations",p5:"spectrum order and uses;properties of EM waves;displacement current",p6:"Young's double slit numericals;interference and diffraction formulas;polarization;single slit patterns",p7:"photoelectric equation;stopping potential graphs;de Broglie numericals",c1:"preparation methods;reactions and reagents;acidity order;conversions",c2:"Williamson synthesis;cleavage reactions;preparation methods;conversions",c3:"acidity and its trend;electrophilic substitution;named reactions;conversions",c4:"ring-opening reactions;acid vs base opening;preparation;conversions",c5:"name reactions;nucleophilic addition mechanisms;distinguishing tests;reagent conversions",c6:"acidity order;derivatives and interconversion;name reactions;conversions",c7:"reagents for conversions;diazonium reactions;distinguishing tests;basicity order",c8:"rate law formulas;integrated rate equations;half-life numericals;graph interpretation",c9:"structures;classification;named tests;key differences",m1:"chain rule problems;implicit and parametric differentiation;standard derivatives;logarithmic differentiation",m2:"maxima and minima;tangent and normal;monotonicity;rate of change",m3:"standard integrals;substitution problems;integration by parts;partial fractions",m4:"properties of definite integrals;King's rule problems;evaluation problems;limits of sums",m5:"area between curves;sketching curves;setting up limits;symmetry shortcuts",m6:"variable separable;linear differential equations;formation of DE;homogeneous DE"},FA={p8:"p1",p9:"p2",p10:"p3",p11:"p4"};
+function foc(id){var c=S.ch[id],k=FA[id]||id,l=FC[k]?FC[k].split(";"):FB[/phys/i.test(c.s)?"Physics":/chem/i.test(c.s)?"Chemistry":/math/i.test(c.s)?"Maths":"X"],a=l[Math.floor(Math.random()*l.length)],b;if(Math.random()<.3&&l.length>1){do{b=l[Math.floor(Math.random()*l.length)]}while(b==a);a+=" and "+b}return a}
+var EN={1:["Recall check","Flashcard-style recall"],2:["Worked example","Practice problems","Recall check"],3:["Concept + self-explain","Mixed timed set","Practice problems"]};
+var SM={"Recall check":"Write just 3 things you remember about {f}","Flashcard-style recall":"Make and answer just 2 questions on {f}","Worked example":"Read just the first step of one solved example on {f}","Practice problems":"Do just 1 problem on {f}","Concept + self-explain":"Read just one paragraph on {f}","Mixed timed set":"Do just 2 questions on {f}, timed"};
+function stp(){if(cur.td)return["Write down the very first action for this task","Open or gather what you need for it","Put what you need on the table, or read its first line"][step];var n=S.ch[cur.ch].n;return step==0?TY[cur.type][cur.t][1].replace("{f}",cur.f):step==1?SM[cur.type].replace("{f}",cur.f):"Put your "+n+" book on the table, or read just its first line"}
+var lvl=2,cur=null,step=0,tick=null,left=0,el=0,parked=0,st=0,enS=2;
+[["Low",1],["Okay",2],["High",3]].forEach(function(e){var b=document.createElement("button");b.textContent=e[0];b.style.borderBottom="3px solid var(--e"+e[1]+")";if(e[1]==2)b.className="on";b.onclick=function(){lvl=e[1];[].forEach.call($("en").children,function(x){x.className=""});b.className="on"};$("en").appendChild(b)});
+function rPref(){$("fs").innerHTML='<option>Any</option>'+subs().map(function(s){return '<option'+(s==S.fs?" selected":"")+'>'+E(s)+'</option>'}).join("");$("fs").value=S.fs;rW();rN();rCd();if(S.td&&(!tdAt||Date.now()-tdAt>3e5))tdLoad()}
+$("fs").onchange=function(){S.fs=this.value;save()};
+function sc(id){["pick","task","run","rev"].forEach(function(x){$(x).classList.add("hide")});$(id).classList.remove("hide")}
+function showTask(){if(cur.td){$("sub").textContent="Todoist · "+(cur.td.d&&cur.td.d<dk(new Date())?"overdue":"due today");$("tt").textContent=cur.td.c}else{$("sub").textContent=S.ch[cur.ch].s+" · "+cur.type+(cur.pz?" · personalised":"");$("tt").textContent=TY[cur.type][cur.t][0]+": "+S.ch[cur.ch].n}$("st").textContent=stp();$("sm").textContent=step==0?"Make it smaller":"Smallest";$("sm").classList.toggle("hide",step>=2);$("sub").style.borderLeft="4px solid "+scol(cur.td?"Todoist":S.ch[cur.ch].s);sc("task")}
+function pickOne(id){if(!id&&S.td&&TD.length&&Math.random()<.65){var K=[];TD.forEach(function(t){K.push(t);if(t.d&&t.d<dk(new Date()))K.push(t)});cur={td:K[Math.floor(Math.random()*K.length)],ch:"",type:"Task",t:0,f:"",pz:false};step=0;showTask();return}if(!id){var ids=Object.keys(S.ch),w=ids.map(function(i){return(S.fs=="Any"||S.ch[i].s!=S.fs?1:4)*((100-pc(i))/100+.2)*(cur&&i==cur.ch?.1:1)}),t=w.reduce(function(a,b){return a+b},0),q=Math.random()*t,i=0;while(i<ids.length-1&&q>w[i]){q-=w[i];i++}id=ids[i]}
+var ty=EN[lvl],pv=cur,tp,tt,pl=S.pz?pzs():null;for(var q=0;q<4;q++){tp=pl?wt(pl):ty[Math.floor(Math.random()*ty.length)];tt=Math.floor(Math.random()*3);if(!pv||tp!=pv.type||tt!=pv.t)break}cur={ch:id,type:tp,t:tt,f:foc(id),pz:!!pl};step=0;showTask()}
+$("go").onclick=function(){pickOne()};$("skip").onclick=function(){pickOne()};
+$("sm").onclick=function(){step++;showTask()};
+function fmt(s){if(s>3600){var m=Math.floor(s/60);return Math.floor(m/60)+"h "+("0"+m%60).slice(-2)+"m"}return Math.floor(s/60)+":"+("0"+s%60).slice(-2)}
+var tEnd=0,rem=0,wk=0,seg0=0,paused=false,dn=false,WL=null,ticking=false;
+function saveRun(rv){try{localStorage.setItem("js3run",JSON.stringify({cur:cur,tEnd:tEnd,rem:rem,wk:wk,seg0:seg0,pz:paused,parked:parked,st:st,enS:enS,rv:rv||0,el:el,dn:dn}))}catch(e){}}
+function clr(){try{localStorage.removeItem("js3run")}catch(e){}}
+function wake(on){try{if(on&&S.wl&&navigator.wakeLock){navigator.wakeLock.request("screen").then(function(l){WL=l}).catch(function(){})}else if(WL){WL.release();WL=null}}catch(e){}}
+function beep(){try{var a=new(window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(function(t){var o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.2;o.connect(g);g.connect(a.destination);o.start(a.currentTime+t);o.stop(a.currentTime+t+.2)})}catch(e){}}
+function alertEnd(){if(S.al===false)return;beep();try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}try{document.title="Time's up! - Just Start";if(window.Notification&&Notification.permission=="granted")new Notification("Time's up",{body:"Rate your session in Just Start"})}catch(e){}}
+function tk(){if(!ticking)return;var n=Date.now();if(paused){$("tm").textContent=fmt(Math.ceil(rem/1000));return}var l=Math.ceil((tEnd-n)/1000);if(l<=0){ticking=false;clearInterval(tick);el=Math.round((wk+(tEnd-seg0))/1000);dn=true;saveRun(1);wake(false);rev(true);alertEnd();return}$("tm").textContent=fmt(l)}
+function run(){ticking=true;sc("run");$("rl").textContent=cur.td?cur.td.c:S.ch[cur.ch].n;$("ps").textContent=paused?"Resume":"Pause";clearInterval(tick);tk();if(ticking)tick=setInterval(tk,250);wake(true)}
+$("start").onclick=function(){var n=Date.now();tEnd=n+3e5;seg0=n;wk=0;rem=0;paused=false;dn=false;el=0;parked=0;st=n;enS=lvl;$("pl").textContent="";busy=true;lock();run();saveRun()};
+function addT(ms){if(paused)rem+=ms;else tEnd+=ms;tk();saveRun()}
+$("ps").onclick=function(){var n=Date.now();if(paused){paused=false;tEnd=n+rem;seg0=n}else{paused=true;rem=tEnd-n;wk+=n-seg0}$("ps").textContent=paused?"Resume":"Pause";tk();saveRun()};
+$("add").onclick=function(){addT(3e5)};
+$("run").addEventListener("click",function(ev){var a=ev.target.dataset&&ev.target.dataset.a;if(a)addT(+a*1000)});
+$("fn").onclick=function(){ticking=false;clearInterval(tick);var n=Date.now();el=Math.round((wk+(paused?0:n-seg0))/1000);dn=false;saveRun(1);wake(false);rev(false)};
+$("more").onclick=function(){var n=Date.now();wk=el*1000;tEnd=n+3e5;seg0=n;paused=false;rem=0;dn=false;document.title="Just Start";run();saveRun()};
+function cat(t){var s=t.toLowerCase();if(/want|goal|dream|proud|rank|future|top |achieve|succeed|career|college|make it|worth/.test(s))return["mot","Motivation"];
+var R=[["Phone/social",/phone|insta|whatsapp|reel|youtube|game|message|text|scroll|social|video|chat|notif/],["Food/thirst",/hungry|food|eat|snack|water|thirst|tea|coffee|chai/],["Worry/stress",/worry|scared|fail|stress|anxious|nervous|behind|tension|afraid|exam|marks/],["Tired/bored",/tired|sleep|yawn|nap|bored|lazy|energy/],["Other task",/homework|project|assignment|practical|call|reply|forgot|todo|to do|buy|email/],["People/noise",/noise|talk|friend|mom|dad|people|loud|music/]];
+for(var i=0;i<R.length;i++)if(R[i][1].test(s))return["dist",R[i][0]];return["dist","Other"]}
+$("pk").onkeydown=function(e){if(e.key=="Enter"&&this.value.trim()){var t=this.value.trim(),c=cat(t);S.pk.push({ts:Date.now(),t:t,kind:c[0],cat:c[1]});parked++;save();saveRun();$("pl").textContent="Parked ("+c[1]+"): "+t;this.value=""}};
+function rev(done){var m=Math.max(1,Math.round(el/60));$("rm").textContent=(done?"Time's up. ":"")+m+" min on "+(cur.td?cur.td.c:S.ch[cur.ch].n)+". Parked thoughts: "+parked;sc("rev");$("more").classList.toggle("hide",!done);$("tdd").classList.toggle("hide",!cur.td);$("tdd").disabled=false;$("tdd").textContent="Also mark it done in Todoist";$("tdm").textContent=""}
+for(var i=1;i<=5;i++)(function(v){var b=document.createElement("button");b.textContent=v;b.style.flex="1";b.onclick=function(){addSess({ts:st,ch:cur.ch,task:cur.td&&cur.td.c,type:cur.type,m:Math.max(1,Math.round(el/60)),p:v,k:parked,en:enS});busy=false;lock();clr();document.title="Just Start";sc("pick")};$("pr").appendChild(b)})(i);
+function rW(){var n=S.notes.filter(function(x){return x.kind=="mot"}).pop();if(n){$("why").textContent=n.t;$("why").classList.remove("hide")}else $("why").classList.add("hide")}
+$("wl").onclick=function(e){e.preventDefault();$("wb").classList.toggle("hide")};
+$("wi").onkeydown=function(e){if(e.key=="Enter"&&this.value.trim()){S.notes.push({ts:Date.now(),t:this.value.trim(),kind:$("nk").value});save();this.value="";rW();$("wb").classList.add("hide");toast("Saved to your "+($("nk").value=="mot"?"motivation":"distraction")+" book")}};
+
+/* EXAMS */
+var OP={};
+function grp(L){var g={};L.forEach(function(i){var s=S.ch[i].s;(g[s]=g[s]||[]).push(i)});return g}
+function rEx(){var h="";exams().forEach(function(e){var id=e[0],L=S.ex[id],d=days(e[2]),a=avg(L),rd=S.rd[id];
+h+='<details data-i="'+id+'"'+(OP[id]?" open":"")+' style="margin-top:10px"><summary><b>'+e[1]+'</b> · '+e[2].slice(5)+' · '+(d<0?"over":d+" days")+' · '+a+'%'+(rd?" · ready":"")+'</summary>'+bar(a);
+h+='<label style="display:block;margin:10px 0"><input type="checkbox" style="width:auto;margin-right:8px" data-r="'+id+'"'+(rd?" checked":"")+'>I feel exam-ready</label>';
+if(rd&&a<60)h+='<p class="mu">You feel ready, but tracked work is only '+a+'%. Worth checking the weakest chapters.</p>';
+var g=grp(L);Object.keys(g).forEach(function(s){h+='<p style="margin:12px 0 2px;border-left:4px solid '+scol(s)+';padding-left:8px"><b>'+E(s)+'</b> <span class="mu">'+avg(g[s])+'%'+(S.rd[id+"|"+s]?' · ready':'')+'</span><label class="mu" style="float:right"><input type="checkbox" style="width:auto;margin-right:4px" data-sr="'+id+'|'+E(s)+'"'+(S.rd[id+"|"+s]?" checked":"")+'>I feel ready</label></p>'+bar(avg(g[s]),scol(s));g[s].forEach(function(i){h+='<div style="display:flex;align-items:center;gap:8px;font-size:14px;margin-top:8px"><input type="checkbox" style="width:auto" data-cr="'+i+'"'+(S.cr[i]?" checked":"")+' title="I feel ready"><span style="flex:1">'+E(S.ch[i].n)+' <span class="mu">'+pc(i)+'%'+(S.cr[i]?' · ready':'')+'</span></span><button data-xr="'+id+'|'+i+'" style="padding:2px 8px" title="Remove from this exam">×</button></div>'+bar(pc(i),scol(s))})});
+var o=Object.keys(S.ch).filter(function(i){return L.indexOf(i)<0});
+h+=(o.length?'<select data-sel="'+id+'" style="margin-top:12px">'+o.map(function(i){return '<option value="'+i+'">'+E(S.ch[i].s+": "+S.ch[i].n)+'</option>'}).join("")+'</select><button class="w" data-add="'+id+'">Add chapter to this exam</button>':"")+'<button class="w" data-p="'+id+'">Pace calculation</button><p class="mu" id="pc-'+id+'"></p></details>'});
+$("exs").innerHTML=h}
+$("exs").addEventListener("toggle",function(ev){OP[ev.target.dataset.i]=ev.target.open},true);
+$("exs").addEventListener("change",function(ev){var t=ev.target;if(t.dataset.r){S.rd[t.dataset.r]=t.checked;save();if(t.checked){conf(80);toast("You feel ready. Go get it!")}rEx()}else if(t.dataset.cr){S.cr[t.dataset.cr]=t.checked;save();if(t.checked){conf(50);toast("Ready feeling logged")}rEx()}else if(t.dataset.sr){S.rd[t.dataset.sr]=t.checked;save();if(t.checked){conf(60);toast("Feeling ready on "+t.dataset.sr.split("|")[1])}rEx()}});
+$("exs").addEventListener("click",function(ev){var t=ev.target,id=t.dataset.add;if(t.dataset.xr){var a=t.dataset.xr.split("|");S.ex[a[0]]=S.ex[a[0]].filter(function(i){return i!=a[1]});save();OP[a[0]]=true;rEx();return}if(id){var v=t.parentNode.querySelector("select").value;S.ex[id].push(v);save();OP[id]=true;rEx();return}
+id=t.dataset.p;if(!id)return;var e=exams().filter(function(x){return x[0]==id})[0],L=S.ex[id],d=days(e[2]),rem=Math.round(L.reduce(function(a,i){return a+(100-pc(i))/100},0)*10)/10,m;
+if(!L.length)m="Add chapters first.";else if(!rem)m="All chapters done.";else if(d<=0)m=rem+" chapters' worth left and no days remaining.";else m=rem+" chapters' worth left, "+d+" days: about "+(Math.ceil(rem/d*10)/10)+" chapters per day.";$("pc-"+id).textContent=m});
+
+/* CHAPTERS */
+var cs=null,cc=null,dlArm=null;
+function rCh(){var h='<div class="row">'+subs().map(function(s,i){return '<button data-s="'+i+'" class="'+(s==cs?"on":"")+'" style="border-left:4px solid '+scol(s)+'">'+E(s)+'</button>'}).join("")+'</div><input id="ns" placeholder="Add a subject, press Enter" style="margin-top:8px">';
+if(cs){var ids=Object.keys(S.ch).filter(function(i){return S.ch[i].s==cs});h+='<div class="card"><p><b>'+E(cs)+'</b> <span class="mu">'+avg(ids)+'%</span></p>'+bar(avg(ids),scol(cs));ids.forEach(function(i){h+='<button class="w'+(i==cc?" on":"")+'" data-c="'+i+'">'+E(S.ch[i].n)+' · '+pc(i)+'%'+(S.cr[i]?' · ready':'')+'</button>'});h+='<input id="nc" placeholder="Add a chapter to '+E(cs)+', press Enter" style="margin-top:10px"></div>'}
+if(cc&&S.ch[cc]){var c=S.ch[cc],hl=["","Easy","Medium","Hard"],L=S.log.filter(function(l){return l.ch==cc}).slice(-6).reverse();
+h+='<div class="card"><p style="font-size:18px;font-weight:600">'+E(c.n)+'</p><p style="font-size:28px;margin:0;color:var(--ac)">'+pc(cc)+'%</p>'+bar(pc(cc),scol(c.s))+'<p class="mu">Credited '+Math.round(c.cr)+' of '+Math.round(tg(cc))+' min. Practice time counts extra.'+(ck(cc).length?' Half of progress comes from the checklist.':'')+(tg(cc)>120*c.h?' Target is raised because recent sessions felt less productive; it comes back down as focus improves.':'')+'</p>'+ckHtml(cc)+'<button class="w" data-h="1">Hardness: '+hl[c.h]+' (tap to change)</button><button class="p" data-go="1">Start a task on this chapter</button><input id="cn" value="'+E(c.n)+'" style="margin-top:12px"><button class="w" data-rn="1">Save name</button><button class="w" data-dl="1">'+(dlArm===cc?"Tap again to delete this chapter":"Delete chapter")+'</button>';
+L.forEach(function(l){h+='<div class="lg">'+new Date(l.ts).toLocaleDateString([],{month:"short",day:"numeric"})+' · '+l.type+' · '+l.m+'m · '+l.p+'/5</div>'});h+='</div>'}
+$("chs").innerHTML=h}
+$("chs").addEventListener("click",function(ev){var t=ev.target;if(t.dataset.s!==undefined){cs=subs()[+t.dataset.s];cc=null;rCh()}else if(t.dataset.c){cc=t.dataset.c;rCh()}else if(t.dataset.h){S.ch[cc].h=S.ch[cc].h%3+1;save();rCh()}else if(t.dataset.go){go("main");pickOne(cc)}else if(t.dataset.cr2){S.cr[cc]=t.checked;save();if(t.checked){conf(50);toast("Ready feeling logged")}rCh()}else if(t.dataset.k!==undefined){var b4=pc(cc),L=ck(cc),i=+t.dataset.k;L[i].d=!L[i].d;save();tickMs(cc,b4);rCh()}else if(t.dataset.kd!==undefined){ck(cc).splice(+t.dataset.kd,1);save();rCh()}else if(t.dataset.rn){var v=$("cn").value.trim();if(v){S.ch[cc].n=v;save();rCh()}}else if(t.dataset.dl){if(dlArm!==cc){dlArm=cc;rCh();return}delete S.ch[cc];S.del.push(cc);Object.keys(S.ex).forEach(function(k){S.ex[k]=S.ex[k].filter(function(i){return i!=cc})});cc=null;dlArm=null;save();rCh()}});
+$("chs").addEventListener("keydown",function(ev){var t=ev.target;if(ev.key!="Enter"||!t.value.trim())return;var v=t.value.trim();if(t.id=="ns"){if(subs().indexOf(v)<0)S.subs.push(v);cs=v}else if(t.id=="nc"){var id="u"+Date.now();S.ch[id]={s:cs,n:v,h:2,cr:0};cc=id}else if(t.id=="cn"){S.ch[cc].n=v}else if(t.id=="ck"){ck(cc).push({t:v,d:false})}save();rCh()});
+
+/* INSIGHTS */
+$("gs").value=S.gs||"bar";$("gs").onchange=function(){S.gs=this.value;save();rIns()};$("rg").value=S.rg;$("rg").onchange=function(){S.rg=this.value;save();rIns()};
+var CO=["#0f8b8d","#e8590c","#1c7ed6","#7048e8","#f59f00","#2f9e44","#d6336c"];
+function sm(P){if(P.length<2)return"";var d="M"+P[0][0]+","+P[0][1];for(var i=0;i<P.length-1;i++){var a=P[i-1]||P[i],b=P[i],c=P[i+1],e=P[i+2]||c;d+=" C"+(b[0]+(c[0]-a[0])/6)+","+(b[1]+(c[1]-a[1])/6)+" "+(c[0]-(e[0]-b[0])/6)+","+(c[1]-(e[1]-b[1])/6)+" "+c[0]+","+c[1]}return d}
+function crv(ser,n,mx,lab){var W=480,Ht=130,px=24,py=10,g='<svg viewBox="0 0 '+W+' '+(Ht+22)+'" style="width:100%"><line x1="'+px+'" y1="'+Ht+'" x2="'+W+'" y2="'+Ht+'" stroke="var(--bd)"/>';
+ser.forEach(function(s,k){var P=[];s[1].forEach(function(v,i){if(v!=null)P.push([px+(W-px-8)*(n>1?i/(n-1):.5),Ht-py-(Ht-2*py)*v/(mx||1)])});g+='<path d="'+sm(P)+'" fill="none" stroke="'+(s[2]||CO[k%7])+'" stroke-width="2.5"/>';P.forEach(function(q){g+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3" fill="'+(s[2]||CO[k%7])+'"/>'})});
+g+='<text x="'+px+'" y="'+(Ht+16)+'" font-size="11" fill="var(--mu)">'+lab[0]+'</text><text x="'+W+'" y="'+(Ht+16)+'" font-size="11" text-anchor="end" fill="var(--mu)">'+lab[1]+'</text></svg>';
+return g+'<div class="mu">'+ser.map(function(s,k){return '<span style="color:'+(s[2]||CO[k%7])+'">&#9679;</span> '+E(s[0])}).join("&nbsp; ")+'</div>'}
+function nb(){return S.rg=="today"?24:S.rg=="week"?7:30}
+function bk(ts){var n=nb();if(S.rg=="today")return new Date(ts).getHours();var a=new Date();a.setHours(0,0,0,0);var b=new Date(ts);b.setHours(0,0,0,0);var i=n-1-Math.round((a-b)/864e5);return i>=0&&i<n?i:-1}
+function cv2(items,key,val,f,cf){var n=nb(),o={},mx=0;items.forEach(function(x){var i=bk(x.ts);if(i<0)return;var k=key(x);o[k]=o[k]||new Array(n).fill(0);o[k][i]+=val(x)});var ks=Object.keys(o);ks.forEach(function(k){o[k].forEach(function(v){if(v>mx)mx=v})});
+return ks.length?crv(ks.map(function(k){return[k,o[k],cf&&cf(k)]}),n,mx,S.rg=="today"?["12am","11pm"]:[n+" days ago","today"])+'<p class="mu">Peak: '+f(mx)+(S.rg=="all"?" (last 30 days)":"")+'</p>':'<p class="mu">No data yet.</p>'}
+function fh(h){var f=function(x){return(x%12||12)+(x%24<12?"am":"pm")};return f(h)+"-"+f(h+1)}
+function hb(o,f,cf){var k=Object.keys(o).sort(function(a,b){return o[b]-o[a]}),mx=o[k[0]]||1;return k.length?k.map(function(x){return '<div style="font-size:14px;margin-top:6px">'+E(x)+' <span class="mu">'+f(o[x])+'</span></div>'+bar(o[x]/mx*100,cf&&cf(x))}).join(""):'<p class="mu">No data yet.</p>'}
+function book(kind,title){var it=S.notes.filter(function(n){return n.kind==kind}).map(function(n){return{ts:n.ts,t:n.t,g:"note"}}).concat(S.pk.filter(function(p){return p.kind==kind}).map(function(p){return{ts:p.ts,t:p.t,g:"parked · "+p.cat}})).sort(function(a,b){return b.ts-a.ts});
+return '<div class="card" style="border-left:4px solid '+(kind=="mot"?"var(--mot)":"var(--dis)")+'"><p><b>'+title+'</b></p>'+(it.length?it.map(function(x){return '<div class="lg"><span class="mu">'+new Date(x.ts).toLocaleDateString([],{month:"short",day:"numeric"})+' · '+E(x.g)+'</span><br>'+E(x.t)+'</div>'}).join(""):'<p class="mu">Nothing here yet.</p>')+'</div>'}
+function subj(L){var h='<div class="card"><p><b>Subject-wise analysis</b></p>';
+subs().forEach(function(sb){var X=L.filter(function(l){return l.sub==sb}),ids=Object.keys(S.ch).filter(function(i){return S.ch[i].s==sb}),c=scol(sb),tm=0,ps=0,bt={},bn={},best="",ba=0;
+X.forEach(function(l){tm+=l.m;ps+=l.p;bt[l.type]=(bt[l.type]||0)+l.p;bn[l.type]=(bn[l.type]||0)+1});
+Object.keys(bt).forEach(function(k){if(bn[k]>=2&&bt[k]/bn[k]>ba){ba=bt[k]/bn[k];best=k}});
+var wc=ids.slice().sort(function(a,b){return pc(a)-pc(b)})[0];
+h+='<div style="border-left:4px solid '+c+';padding-left:10px;margin-top:12px"><b>'+E(sb)+'</b> <span class="mu">'+avg(ids)+'% tracked</span>'+bar(avg(ids),c)+'<div class="mu" style="margin-top:4px">'+(X.length?hm(tm)+' · '+X.length+' sessions · avg '+(ps/X.length).toFixed(1)+'/5'+(best?' · best: '+E(best):''):'No sessions in this range')+(wc?' · weakest: '+E(S.ch[wc].n)+' ('+pc(wc)+'%)':'')+'</div></div>'});
+return h+'</div>'}
+function rIns(){var L=S.log.filter(function(l){return inR(l.ts)}),P=S.pk.filter(function(x){return inR(x.ts)}),tm=0,ps=0,H=[],i;
+L.forEach(function(l){tm+=l.m;ps+=l.p});for(i=0;i<24;i++)H.push({m:0,n:0,p:0});L.forEach(function(l){var x=H[l.h];x.m+=l.m;x.n++;x.p+=l.p});
+var bh=-1,bv=0;H.forEach(function(x,i){if(x.n&&x.p/x.n>bv){bv=x.p/x.n;bh=i}});
+var h='<div class="card"><p><b>'+hm(tm)+'</b> focused · '+L.length+' sessions · avg productivity '+(L.length?(ps/L.length).toFixed(1):"-")+'/5</p></div><div class="card"><p><b>Best hours</b></p>';
+h+=bh<0?'<p class="mu">Log a session to see this.</p>':'<p>Best time so far: <b>'+fh(bh)+'</b> (avg '+bv.toFixed(1)+'/5 over '+H[bh].n+' sessions)</p>';
+if(S.gs=="curve"){h+=crv([["Avg productivity",H.map(function(x){return x.n?x.p/x.n:null})]],24,5,["12am","11pm"])+'<p class="mu">Curve = average productivity for sessions started in each hour (hours with no sessions are skipped).</p>'}else{h+='<div style="display:flex;align-items:flex-end;gap:2px;height:90px">';H.forEach(function(x,i){h+='<div title="'+fh(i)+'" style="flex:1;background:var(--ac);height:'+(x.n?x.p/x.n/5*100:0)+'%;min-height:'+(x.n?2:0)+'px"></div>'});
+h+='</div><div class="mu" style="display:flex;justify-content:space-between"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div><p class="mu">Bar height = average productivity for sessions started in that hour.</p>';}
+h+='<details><summary class="mu">All hourly data</summary>'+H.map(function(x,i){return x.n?'<div class="lg">'+fh(i)+': '+x.n+' sessions · '+hm(x.m)+' · avg '+(x.p/x.n).toFixed(1)+'/5</div>':""}).join("")+'</details>';
+h+='<details><summary class="mu">All sessions</summary>'+L.slice().reverse().map(function(l){return '<div class="lg"><span style="color:var(--e'+(l.en||2)+')">&#9679;</span> '+new Date(l.ts).toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})+' · '+E(l.task)+' · '+E(l.type)+' · '+l.m+'m · '+l.p+'/5 · parked '+l.k+' · <b style="color:'+(l.mood=="Sharp"?"var(--mot)":l.mood=="Okay"?"inherit":"var(--dis)")+'">'+l.mood+'</b></div>'}).join("")+'</details></div>';
+var bs={},bt={},bd={};L.forEach(function(l){bs[l.sub]=(bs[l.sub]||0)+l.m;bt[l.type]=(bt[l.type]||0)+l.m});P.forEach(function(p){if(p.kind=="dist")bd[p.cat]=(bd[p.cat]||0)+1});
+h+=subj(L);h+='<div class="card"><p><b>Time per subject</b></p>'+(S.gs=="curve"?cv2(L,function(l){return l.sub},function(l){return l.m},hm,scol):hb(bs,hm,scol))+'<p style="margin-top:14px"><b>Time per task type</b></p>'+(S.gs=="curve"?cv2(L,function(l){return l.type},function(l){return l.m},hm):hb(bt,hm))+'</div>';
+h+='<div class="card"><p><b>What pulls you away</b> <span class="mu">(auto-sorted from parked thoughts)</span></p>'+(S.gs=="curve"?cv2(P.filter(function(p){return p.kind=="dist"}),function(p){return p.cat},function(){return 1},function(v){return v+"x"}):hb(bd,function(v){return v+"x"},function(){return"var(--dis)"}))+'</div>';
+$("insb").innerHTML=h+book("mot","Motivation book")+book("dist","Distraction book")}
+var RW=["Take a 10-minute walk","Have a favourite snack","Listen to one favourite song","Stretch and drink some water","Step outside for fresh air","Watch one short video you enjoy"];
+function tdm(){var t=0,td=dk(new Date());S.log.forEach(function(l){if(l.d==td)t+=l.m});return t}
+function sp(x){return avg(Object.keys(S.ch).filter(function(i){return S.ch[i].s==x}))}
+function crd(l){return l.cr!=null?l.cr:l.m*(["Practice problems","Mixed timed set"].indexOf(l.type)>=0?1.25:1)}
+function md(p,k){return(p>=4&&k<=1)?"Sharp":(p<=2||k>=4)?"Low/scattered":"Okay"}
+function addSess(o){if(!S.ch[o.ch]){var d0=new Date(o.ts);S.log.push({ts:o.ts,d:dk(d0),h:d0.getHours(),ch:"",sub:"Todoist",task:o.task||"Task",type:"Task",m:o.m,p:o.p,k:o.k,mood:md(o.p,o.k),en:o.en,cr:0,at:Date.now()});save();rC();conf(40);toast("Session logged. Nice work.");return}var c=S.ch[o.ch],cr=o.m*(["Practice problems","Mixed timed set"].indexOf(o.type)>=0?1.25:1),b4=pc(o.ch),sb=sp(c.s),tb=tdm(),dt=new Date(o.ts),ms=[],big=0,mood=(o.p>=4&&o.k<=1)?"Sharp":(o.p<=2||o.k>=4)?"Low/scattered":"Okay";
+c.cr+=cr;S.log.push({ts:o.ts,d:dk(dt),h:dt.getHours(),ch:o.ch,sub:c.s,task:c.n,type:o.type,m:o.m,p:o.p,k:o.k,mood:mood,en:o.en,cr:cr,at:Date.now()});
+var af=pc(o.ch),sa=sp(c.s),ta=tdm();
+[25,50,75,100].forEach(function(x){if(b4<x&&af>=x){ms=[c.n+" reached "+x+"%!"];big=Math.max(big,x==100?2:1)}});
+[50,100].forEach(function(x){if(sb<x&&sa>=x){ms.push(c.s+" is "+x+"% done!");big=Math.max(big,x==100?2:1)}});
+[60,120,180].forEach(function(x){if(tb<x&&ta>=x){ms.push(x+" minutes focused today!");big=Math.max(big,1)}});
+save();rC();rN();
+if(ms.length){conf(big==2?240:130);toast(ms.slice(0,2).join("\n")+"\nReward: "+RW[Math.floor(Math.random()*RW.length)],4800)}else{conf(40);toast(o.p<=2?"Logged. This chapter's target rises until focus improves.":"Session logged. Nice work.")}}
+function pzs(){var L=S.log.filter(function(l){return l.en==lvl&&TY[l.type]});return L.length>=10?L:null}
+function wt(L){var ks=Object.keys(TY),w=ks.map(function(k){var x=L.filter(function(l){return l.type==k}),a=x.length>=3?x.reduce(function(t,l){return t+l.p},0)/x.length:3;return a*a}),t=w.reduce(function(a,b){return a+b},0),q=Math.random()*t,i=0;while(i<ks.length-1&&q>w[i]){q-=w[i];i++}return ks[i]}
+function rN(){var b=null,d=0;exams().forEach(function(e){var x=days(e[2]);if(x>=0&&(b===null||x<d)){b=e;d=x}});
+if(!b){$("nx").classList.add("hide");return}
+var L=S.ex[b[0]],a=avg(L),rem=L.reduce(function(t,i){return t+(100-pc(i))/100},0),pr=d>0&&rem>0?Math.ceil(rem/d*10)/10:0;
+$("nx").classList.remove("hide");$("nx").innerHTML='<p style="margin:0"><b>Next: '+E(b[1])+'</b> · '+(d==0?"today":"in "+d+" day"+(d==1?"":"s"))+'</p>'+bar(a)+'<p class="mu" style="margin:4px 0 0">'+(L.length?a+'% tracked'+(pr?' · about '+pr+' chapters/day to finish':''):'No chapters added yet')+(S.rd[b[0]]?' · you feel ready':'')+'</p>'}
+var ua=false;
+function ru(){var h="",cut=Date.now()-864e5;S.log.forEach(function(l,i){if((l.at||l.ts)>=cut)h='<div class="lg" style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span>'+new Date(l.ts).toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})+' · '+E(l.task)+' · '+l.m+'m · '+l.p+'/5</span><button data-u="'+i+'">'+(ua===i?"Sure?":"Undo")+'</button></div>'+h});$("ul").innerHTML=h||'<p class="mu">Nothing logged in the last 24 hours.</p>'}
+$("ul").onclick=function(ev){var i=ev.target.dataset&&ev.target.dataset.u;if(i===undefined)return;i=+i;if(ua!==i){ua=i;ru();return}var l=S.log[i];S.log.splice(i,1);if(l.ch&&S.ch[l.ch])S.ch[l.ch].cr=Math.max(0,S.ch[l.ch].cr-crd(l));ua=false;save();rC();rN();ru();$("um").textContent="Removed."};
+var MC=null,TD=[],TDR="",tdOnce=false,tdAt=0,TX=S.tx||[];
+function exams(){var seen={},A=(S.td&&TX.length)?TX.map(function(x){var st=EXS.filter(function(e){return e[2]==x.d})[0],k=st?st[0]:"t"+x.id;if(!S.ex[k])S.ex[k]=[];return[k,x.c,x.d]}).filter(function(e){if(seen[e[0]])return false;seen[e[0]]=1;return days(e[2])>=0}):EXS;return A.slice().sort(function(a,b){return a[2]<b[2]?-1:1})}
+function rCd(){$("cds").innerHTML=exams().filter(function(e){return days(e[2])>=0}).slice(0,3).map(function(e){var d=days(e[2]);return '<div class="cd"><b>'+d+'</b><span class="mu">'+E(e[1].slice(0,24))+(d==0?" today":" days")+'</span></div>'}).join("")}
+function exFetch(){var ks=(S.kw||"exam,test,midterm,practical,project").split(",").map(function(x){return x.trim()}).filter(Boolean).slice(0,8);return Promise.all(ks.map(function(k){return MC.callTool("Todoist","find-tasks",{searchText:k,limit:30}).then(tl).catch(function(){return[]})})).then(function(A){var m={},td=dk(new Date());A.forEach(function(L){L.forEach(function(t){if(t.d&&t.d.slice(0,10)>=td)m[t.id]={id:t.id,c:t.c,d:t.d.slice(0,10)}})});TX=Object.keys(m).map(function(k){return m[k]});S.tx=TX;save();rN();rCd();$("tds").textContent+=" · "+TX.length+" exam/deadline task"+(TX.length==1?"":"s")+" found."})}
+function tdErr(e){var c=e&&e.code;return c=="needs_reauth"?"Todoist rejected the token. Paste a fresh one above.":c=="server_not_connected"?"Todoist isn't connected to your Claude account.":c=="selection_required"?"Choose a Todoist connection in Claude first.":(e&&e.message)?"Todoist said: "+e.message:"Couldn't reach Todoist. Try again."}
+function tl(r){var p=r&&r.payload;TDR=typeof p=="string"?p:JSON.stringify(p||"");if(typeof p=="string"){try{p=JSON.parse(p)}catch(e){}}var a=Array.isArray(p)?p:(p&&(p.tasks||p.results||p.items))||[];return a.filter(function(t){return t&&t.id&&(t.content||t.title||t.name)}).map(function(t){var d=(t.due&&(t.due.date||t.due.string))||(typeof t.due=="string"?t.due:"");return{id:String(t.id),c:String(t.content||t.title||t.name),d:d}})}
+function TKN(){try{return localStorage.getItem("js3tk")||""}catch(e){return""}}
+function tdApi(path,opt){opt=opt||{};opt.headers={Authorization:"Bearer "+TKN()};return fetch("https://api.todoist.com/api/v1"+path,opt).then(function(r){if(r.status==401||r.status==403)throw{code:"needs_reauth"};if(!r.ok)throw{message:"error "+r.status};return r.status==204?{}:r.text().then(function(t){try{return JSON.parse(t)}catch(e){return{}}})})}
+var TSH={callTool:function(sv,nm,a){if(nm=="find-tasks"){var q=a.filter||("search: "+a.searchText);return tdApi("/tasks/filter?query="+encodeURIComponent(q)+"&limit="+(a.limit||30)).then(function(j){return{payload:j.results||[]}})}if(nm=="complete-tasks")return Promise.all(a.ids.map(function(i){return tdApi("/tasks/"+i+"/close",{method:"POST"})}));return Promise.reject({message:"unsupported"})}};
+function tdMcp(){return Promise.resolve(TKN()?TSH:null)}
+$("tk").value=TKN()?"\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022":"";
+$("tk").onchange=function(){var v=this.value.trim();if(!v||/^\u2022+$/.test(v))return;try{localStorage.setItem("js3tk",v)}catch(e){}this.value="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";MC=null;if(S.td)tdLoad()};
+function tdLoad(){tdAt=Date.now();$("tds").textContent="Loading Todoist...";(MC?Promise.resolve(MC):tdMcp()).then(function(m){if(!m)throw{code:"unavailable",message:"Paste your Todoist API token above first."};MC=m;return m.callTool("Todoist","find-tasks",{filter:"today | overdue",limit:20})}).then(function(r){TD=tl(r);$("tds").textContent=TD.length?"Todoist: "+TD.length+" task"+(TD.length==1?"":"s")+" due today or overdue will get priority.":(!TDR||TDR=='""'||TDR=="[]"?"Todoist connected. No tasks due today or overdue.":"Todoist replied but I couldn't read tasks from it. Tell Claude this reply: "+TDR.slice(0,200))}).then(exFetch).catch(function(e){tdAt=0;$("tds").textContent=tdErr(e)})}
+$("tdb").onclick=function(){S.td=!S.td;save();rSet();if(S.td){tdOnce=true;tdLoad()}else{TD=[];$("tds").textContent=""}};
+$("tdd").onclick=function(){if(!cur||!cur.td||!MC)return;var id=cur.td.id;$("tdd").disabled=true;MC.callTool("Todoist","complete-tasks",{ids:[id]}).then(function(){TD=TD.filter(function(t){return t.id!=id});$("tdd").textContent="Done in Todoist";toast("Completed in Todoist")}).catch(function(e){$("tdd").disabled=false;$("tdm").textContent=tdErr(e)})};
+function ath(){try{var r=document.documentElement,t=S.th||"auto";if(t=="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t)}catch(e){}}
+function rSet(){$("th").value=S.th||"auto";$("al").checked=S.al!==false;$("wl").checked=!!S.wl;$("kw").value=S.kw||"exam,test,midterm,practical,project";$("pz").checked=!!S.pz;var LV=["","Low","Okay","High"],h="";
+for(var v=1;v<=3;v++){var L=S.log.filter(function(l){return l.en==v&&TY[l.type]});
+if(L.length<10)h+='<div class="lg">'+LV[v]+' energy: '+L.length+'/10 sessions logged</div>';
+else{var bt="",ba=0;Object.keys(TY).forEach(function(k){var x=L.filter(function(l){return l.type==k});if(x.length>=2){var a=x.reduce(function(t,l){return t+l.p},0)/x.length;if(a>ba){ba=a;bt=k}}});h+='<div class="lg">'+LV[v]+' energy: best so far <b>'+E(bt||"not enough variety yet")+'</b>'+(bt?' (avg '+ba.toFixed(1)+'/5)':'')+'</div>'}}
+$("pzs").innerHTML=h;
+var pc0=$("mc").value,pt0=$("mt").value;
+$("mc").innerHTML=Object.keys(S.ch).map(function(i){return '<option value="'+i+'">'+E(S.ch[i].s+": "+S.ch[i].n)+'</option>'}).join("");
+$("mt").innerHTML=Object.keys(TY).map(function(k){return '<option>'+E(k)+'</option>'}).join("");
+if(S.ch[pc0])$("mc").value=pc0;if(TY[pt0])$("mt").value=pt0;
+if(!$("md").value){var n=new Date();n.setMinutes(n.getMinutes()-n.getTimezoneOffset());$("mf").value=n.toISOString().slice(0,16);n.setMinutes(n.getMinutes()-30);$("md").value=n.toISOString().slice(0,16)}mshow();
+ua=false;ru();$("tdb").textContent=S.td?"Hide Todoist tasks":"Connect Todoist"}
+$("pz").onchange=function(){S.pz=this.checked;save();rSet()};
+function mmin(){var a=new Date($("md").value).getTime(),b=new Date($("mf").value).getTime();return isNaN(a)||isNaN(b)?0:Math.round((b-a)/6e4)}
+function mshow(){var m=mmin();$("mmn").textContent=m>0?"= "+hm(m):"Set a start time, and an end time after it"}
+$("md").onchange=mshow;$("mf").onchange=mshow;
+$("ma").onclick=function(){var m=mmin(),p=+$("mp").value,ch=$("mc").value,ts=new Date($("md").value).getTime();
+if(!(m>0)||!(p>=1&&p<=5)||!S.ch[ch]){$("mg").textContent="Set a start and an end time (end after start) and a productivity rating (1-5).";return}
+addSess({ts:ts,ch:ch,type:$("mt").value,m:m,p:p,k:0,en:+$("me").value});$("mg").textContent="Added.";$("md").value="";$("mf").value="";rSet()};
+$("th").onchange=function(){S.th=this.value;save();ath()};
+$("al").onchange=function(){S.al=this.checked;save()};$("wl").onchange=function(){S.wl=this.checked;save()};
+$("kw").onchange=function(){S.kw=this.value;save();if(S.td&&MC)tdLoad()};
+$("nf").onclick=function(){try{if(!window.Notification){$("nm").textContent="Notifications aren't available here.";return}Notification.requestPermission().then(function(p){$("nm").textContent=p=="granted"?"Notifications allowed.":"Notifications weren't allowed here."})}catch(e){$("nm").textContent="Notifications aren't available here."}};
+document.addEventListener("visibilitychange",function(){if(!document.hidden){document.title="Just Start";tk()}});
+var DL=null;try{if(window.claude&&window.claude.use)window.claude.use("downloads").then(function(d){DL=d}).catch(function(){})}catch(e){}
+function nosave(){$("bm").textContent="Saving a file isn't available here. Use Show backup text and copy it somewhere safe."}
+$("bx").onclick=function(){if(!DL){try{var b=new Blob([JSON.stringify(S)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="just-start-backup-"+dk(new Date())+".json";document.body.appendChild(a);a.click();a.remove();$("bm").textContent="Backup downloaded.";return}catch(e){nosave();return}}DL.save({filename:"just-start-backup-"+dk(new Date())+".json",data:JSON.stringify(S)}).then(function(){$("bm").textContent="Backup saved."}).catch(function(e){if(e&&e.code=="declined")$("bm").textContent="Cancelled.";else nosave()})};
+$("bt").onclick=function(){$("ba").value=JSON.stringify(S);$("ba").select();try{document.execCommand("copy")}catch(e){}$("bm").textContent="Backup text is in the box. Copy it into Notes or a file."};
+$("bf").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){$("ba").value=rd.result;$("bm").textContent="File loaded. Tap Restore to replace your current data."};rd.readAsText(f)};
+$("br").onclick=function(){try{var o=JSON.parse($("ba").value);if(!o||!o.ch||!o.ex||!Array.isArray(o.log))throw 0;["log","pk","notes","subs"].forEach(function(k){o[k]=o[k]||[]});o.rd=o.rd||{};o.cr=o.cr||{};o.fs=o.fs||"Any";o.rg=o.rg||"week";S=o;mig();save();rC();rPref();rW();$("bm").textContent="Restored.";conf(60)}catch(e){$("bm").textContent="That doesn't look like a valid backup."}};
+try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js')}catch(e){}
+ath();go("main");rC();
+try{var R=JSON.parse(localStorage.getItem("js3run")||"null");if(R&&R.cur&&(R.cur.td||S.ch[R.cur.ch])){cur=R.cur;tEnd=R.tEnd;rem=R.rem;wk=R.wk;seg0=R.seg0;paused=R.pz;parked=R.parked;st=R.st;enS=R.enS;el=R.el||0;busy=true;lock();if(R.rv){dn=R.dn;rev(R.dn)}else run()}}catch(e){}
+</script></body></html>
